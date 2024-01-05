@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Post Details</title>
+    <style>
+        /* Add your CSS styling here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .post-detail {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .post-title {
+            color: #333;
+        }
+        .post-content {
+            color: #666;
+        }
+        .post-info {
+            font-style: italic;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="postDetail" class="post-detail">
+        <!-- Post details will be loaded here -->
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('postId'); // Get the post ID from the query string
+
+    fetch(`/board/posts/${postId}`)
+        .then(response => response.json())
+        .then(post => {
+            const postDetailDiv = document.getElementById('postDetail');
+            postDetailDiv.innerHTML = `
+            <h2 class="post-title">${post.g_title}</h2>
+            <p class="post-content">${post.g_content}</p>
+            <p class="post-info">Posted by ${post.userID} on ${new Date(post.g_wdate).toLocaleString()}</p>
+        `;
+        })
+        .catch(error => {
+            console.error('Error fetching post details:', error);
+            postDetailDiv.innerHTML = '<p>Error loading post details.</p>';
+        });
+</script>
+</body>
+</html>
