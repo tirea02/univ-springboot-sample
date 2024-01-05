@@ -49,9 +49,9 @@
         .then(post => {
             const postDetailDiv = document.getElementById('postDetail');
             postDetailDiv.innerHTML = `
-            <h2 class="post-title">${post.g_title}</h2>
-            <p class="post-content">${post.g_content}</p>
-            <p class="post-info">Posted by ${post.userID} on ${new Date(post.g_wdate).toLocaleString()}</p>
+            <h2 class="post-title">${post.title}</h2>
+            <p class="post-content">${post.content}</p>
+            <p class="post-info">Posted by ${post.userID} on ${new Date(post.date).toLocaleString()}</p>
         `;
         })
         .catch(error => {

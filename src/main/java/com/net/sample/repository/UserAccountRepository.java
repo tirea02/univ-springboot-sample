@@ -1,24 +1,25 @@
 package com.net.sample.repository;
 
-import com.net.sample.model.Login;
+import com.net.sample.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LoginRepository {
+public class UserAccountRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Login getUserByUsername(String username) {
+    public UserAccount getUserByUserId(String userId) {
         return jdbcTemplate.queryForObject(
-                "SELECT * FROM login WHERE userID = ?",
-                new Object[]{username},
+                "SELECT * FROM userAccount WHERE userId = ?",
+                new Object[]{userId},
                 (rs, rowNum) ->
-                        new Login(
-                                rs.getString("userID"),
-                                rs.getString("pwd"),
+                        new UserAccount(
+                                rs.getInt("id"),
+                                rs.getString("userId"),
+                                rs.getString("password"),
                                 rs.getString("name"),
                                 rs.getString("phone")
                         )

@@ -96,7 +96,7 @@
                 console.log(response);
                 if (response.status === "loggedIn") {
                     // User is logged in, generate the welcome message and update the UI
-                    document.getElementById('welcomeSection').textContent = `Welcome ${response.user.userID}`;
+                    document.getElementById('welcomeSection').textContent = `Welcome ${response.user.userId}`;
                     document.getElementById('loginSection').style.display = 'none';
                     document.getElementById('newPostForm').style.display = 'block';
                     document.getElementById('logoutButton').style.display = 'block';
@@ -146,10 +146,10 @@
                 posts.forEach(post => {
                     const postElement = document.createElement('div');
                     postElement.innerHTML = `
-                        <h3 class="post-title"><a href="post-detail.html?postId=${post.g_num}">${post.g_title}</a></h3>
-                        <p>Posted by: ${post.userID}</p>
-                        <p>Date: ${new Date(post.g_wdate).toLocaleString()}</p>
-                        <p>Hits: ${post.g_hit}</p>
+                        <h3 class="post-title"><a href="post-detail.html?postId=${post.id}">${post.title}</a></h3>
+                        <p>Posted by: ${post.userId}</p>
+                        <p>Date: ${new Date(post.date).toLocaleString()}</p>
+                        <p>viewCounts: ${post.viewCount}</p>
                     `;
                     postsContainer.appendChild(postElement);
                 });
