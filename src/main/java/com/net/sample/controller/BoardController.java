@@ -22,10 +22,11 @@ public class BoardController {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<Post> getPostDetails(@PathVariable int postId) {
+    public ResponseEntity<Post> getPostDetails(@PathVariable(name = "postId") int postId) {
         Post post = postService.getPostById(postId);
         return ResponseEntity.ok(post);
     }
+
 
 
 //    @PostMapping("/posts")
