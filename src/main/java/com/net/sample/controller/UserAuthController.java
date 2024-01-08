@@ -2,24 +2,25 @@ package com.net.sample.controller;
 import com.net.sample.dto.LoginCredentials;
 import com.net.sample.model.UserAccount;
 import com.net.sample.repository.UserAccountRepository;
+import com.net.sample.service.UserAccountService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/user")
 public class UserAuthController {
 
     @Autowired
     private UserAccountRepository userAccountRepository;
+    @Autowired
+    private UserAccountService userAccountService;
 
     @Autowired
     private HttpSession httpSession; // Inject HttpSession
@@ -61,6 +62,17 @@ public class UserAuthController {
         // Invalidate the session to log the user out
         httpSession.invalidate();
         return ResponseEntity.ok("Logout successful");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@ModelAttribute UserAccount userAccount) {
+        try {
+            System.out.println(userAccount);
+            UserAccount newUser = userAccountService.createUserAccount(userAccount);
+            return ResponseEntity.ok(newUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 
 
