@@ -65,7 +65,7 @@ public class UserAuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@ModelAttribute UserAccount userAccount) {
+    public ResponseEntity<?> registerUser(@RequestBody UserAccount userAccount) {
         try {
             System.out.println(userAccount);
             UserAccount newUser = userAccountService.createUserAccount(userAccount);
