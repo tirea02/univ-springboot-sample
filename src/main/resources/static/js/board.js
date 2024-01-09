@@ -1,19 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+
+
     checkLoginStatus().then(response => {
         console.log(response);
         if (response.status === "loggedIn") {
             // User is logged in, generate the welcome message and update the UI
             document.getElementById('welcomeSection').textContent = `Welcome ${response.user.userId}`;
             document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('newPostForm').style.display = 'block';
             document.getElementById('logoutButton').style.display = 'block';
+            document.getElementById('newPostButton').style.display = 'block';
+
         } else {
             // User is not logged in, hide the welcome section and adjust the UI accordingly
             document.getElementById('welcomeSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('newPostForm').style.display = 'none';
             document.getElementById('logoutButton').style.display = 'none';
+            document.getElementById('newPostButton').style.display = 'none';
+
         }
     });
 
@@ -33,6 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('loginButton').addEventListener('click', function() {
         // Implement login logic or redirect to a login page
         window.location.href = '/login.html';
+    });
+
+    document.getElementById('newPostButton').addEventListener('click', function() {
+        window.location.href = '/create-post.html'; // Redirect to the post creation page
     });
 
     // Add event listener to logout button
@@ -55,31 +63,80 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    fetch('/board/posts')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(posts => {
-            const postsContainer = document.getElementById('posts');
-            posts.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.innerHTML = `
-                        <h3 class="post-title"><a href="post-detail.html?postId=${post.id}">${post.title}</a></h3>
-                        <p>Posted by: ${post.userId}</p>
-                        <p>Date: ${new Date(post.date).toLocaleString()}</p>
-                        <p>viewCounts: ${post.viewCount}</p>
-                    `;
-                postsContainer.appendChild(postElement);
-            });
+    const postsPerPage = 5;
+    let currentPage = 1;
 
+    fetch('/board/posts')
+        .then(response => response.json())
+        .then(data => {
+            // Sort posts by date in descending order (newest first)
+            let  allPosts = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            displayPosts(allPosts, currentPage, postsPerPage);
+            // Create pagination buttons
+            createPaginationButtons(allPosts.length, postsPerPage, allPosts);
         })
-        .catch(error => {
-            console.error('Error fetching posts:', error);
-            postsContainer.innerHTML = '<p>Failed to load posts.</p>';
+        .catch(error => console.error('Error fetching posts:', error));
+
+    function displayPosts(posts, page, postsPerPage) {
+        const startIndex = (page - 1) * postsPerPage;
+        const selectedPosts = posts.slice(startIndex, startIndex + postsPerPage);
+
+        const postsContainer = document.getElementById('posts');
+        postsContainer.innerHTML = '';
+        selectedPosts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.innerHTML = `
+                <h3 class="post-title"><a href="post-detail.html?postId=${post.id}">${post.title}</a></h3>
+                <p>Posted by: ${post.userId}</p>
+                <p>Date: ${new Date(post.date).toLocaleString()}</p>
+                <p>viewCounts: ${post.viewCount}</p>
+            `;
+            postsContainer.appendChild(postElement);
         });
+    }
+
+    function createPaginationButtons(totalPosts, postsPerPage, allPosts) {
+        const pageCount = Math.ceil(totalPosts / postsPerPage);
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = '';
+
+        for (let i = 1; i <= pageCount; i++) {
+            const button = document.createElement('button');
+            button.innerText = i;
+            button.addEventListener('click', () => {
+                currentPage = i;
+                displayPosts(allPosts, currentPage, postsPerPage);
+            });
+            paginationContainer.appendChild(button);
+        }
+    }
+
+    //
+    // fetch('/board/posts')
+    //     .then(response => {
+    //         if (!response.ok) {
+    //             throw new Error('Network response was not ok');
+    //         }
+    //         return response.json();
+    //     })
+    //     .then(posts => {
+    //         const postsContainer = document.getElementById('posts');
+    //         posts.forEach(post => {
+    //             const postElement = document.createElement('div');
+    //             postElement.innerHTML = `
+    //                     <h3 class="post-title"><a href="post-detail.html?postId=${post.id}">${post.title}</a></h3>
+    //                     <p>Posted by: ${post.userId}</p>
+    //                     <p>Date: ${new Date(post.date).toLocaleString()}</p>
+    //                     <p>viewCounts: ${post.viewCount}</p>
+    //                 `;
+    //             postsContainer.appendChild(postElement);
+    //         });
+    //
+    //     })
+    //     .catch(error => {
+    //         console.error('Error fetching posts:', error);
+    //         postsContainer.innerHTML = '<p>Failed to load posts.</p>';
+    //     });
 
 
 });

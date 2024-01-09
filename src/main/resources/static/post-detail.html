@@ -31,6 +31,11 @@
             font-style: italic;
             color: #999;
         }
+        .post-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -49,10 +54,11 @@
         .then(post => {
             const postDetailDiv = document.getElementById('postDetail');
             postDetailDiv.innerHTML = `
-            <h2 class="post-title">${post.title}</h2>
-            <p class="post-content">${post.content}</p>
-            <p class="post-info">Posted by ${post.userId} on ${new Date(post.date).toLocaleString()}</p>
-        `;
+                <h2 class="post-title">${post.title}</h2>
+                <img src="${post.imgFile}" alt="Post Image" class="post-image">
+                <p class="post-content">${post.content}</p>
+                <p class="post-info">Posted by ${post.userId} on ${new Date(post.date).toLocaleString()}</p>
+            `;
         })
         .catch(error => {
             console.error('Error fetching post details:', error);

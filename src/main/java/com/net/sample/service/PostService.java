@@ -1,10 +1,14 @@
 package com.net.sample.service;
 
+import com.net.sample.dto.NewPost;
 import com.net.sample.model.Post;
+import com.net.sample.model.PostReply;
+import com.net.sample.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -13,37 +17,21 @@ public class PostService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Post> getAllPosts() {
-        return jdbcTemplate.query(
-                "SELECT p.id, p.title, p.content, p.date, p.viewCount, p.img_file, p.userId as userAccountId, u.userId FROM post p JOIN userAccount u ON p.userId = u.id ORDER BY p.date DESC",
-                (rs, rowNum) -> new Post(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("content"),
-                        rs.getTimestamp("date").toLocalDateTime(),
-                        rs.getInt("viewCount"),
-                        rs.getString("img_file"),
-                        rs.getInt("userAccountId"),
-                        rs.getString("userId")
-                )
-        );
-    }
+    @Autowired
+    private PostRepository postRepository;
 
-    public Post getPostById(int postId) {
-        return jdbcTemplate.queryForObject(
-                "SELECT p.id, p.title, p.content, p.date, p.viewCount, p.img_file, p.userId as userAccountId, u.userId FROM post p JOIN userAccount u ON p.userId = u.id WHERE p.id = ?",
-                new Object[]{postId},
-                (rs, rowNum) ->
-                        new Post(
-                                rs.getInt("id"),
-                                rs.getString("title"),
-                                rs.getString("content"),
-                                rs.getTimestamp("date").toLocalDateTime(),
-                                rs.getInt("viewCount"),
-                                rs.getString("img_file"),
-                                rs.getInt("userAccountId"),
-                                rs.getString("userId")
-                        )
-        );
+
+
+    public Post createPost(NewPost newPostDto, int userAccountId) {
+        // Create a new Post entity from the DTO and userId
+        Post post = new Post();
+        post.setTitle(newPostDto.getTitle());
+        post.setContent(newPostDto.getContent());
+        post.setImgFile(newPostDto.getImgFile());
+        post.setUserAccountId(userAccountId); // Set the userId of the post
+        post.setDate(LocalDateTime.now()); // Set the current date and time
+
+        // Save the post to the database
+        return postRepository.save(post);
     }
 }
