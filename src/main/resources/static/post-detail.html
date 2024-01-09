@@ -55,7 +55,7 @@
             const postDetailDiv = document.getElementById('postDetail');
             postDetailDiv.innerHTML = `
                 <h2 class="post-title">${post.title}</h2>
-                <img src="${post.imgFile}" alt="Post Image" class="post-image">
+                <img src="img/${post.imgFile}" alt="Post Image" class="post-image">
                 <p class="post-content">${post.content}</p>
                 <p class="post-info">Posted by ${post.userId} on ${new Date(post.date).toLocaleString()}</p>
             `;
