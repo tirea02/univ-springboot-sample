@@ -18,7 +18,7 @@ public class PostReplyRepository {
         PostReply reply = new PostReply();
         reply.setId(rs.getInt("id"));
         reply.setUserAccountId(rs.getInt("userAccountId"));
-        reply.setUserId(rs.getString("userId")); // Map the userId from the ResultSet
+        reply.setUserId(rs.getString("userId"));
         reply.setPostId(rs.getInt("postId"));
         reply.setContent(rs.getString("content"));
         reply.setDate(rs.getTimestamp("date").toLocalDateTime());
@@ -29,12 +29,18 @@ public class PostReplyRepository {
         String sql = "SELECT pr.*, ua.userId FROM postreply pr " +
                 "JOIN userAccount ua ON pr.userAccountId = ua.id " +
                 "WHERE pr.postId = ?";
+
         return jdbcTemplate.query(sql, new Object[]{postId}, rowMapper);
     }
 
     public void saveReply(PostReply reply) {
         String sql = "INSERT INTO postreply (userAccountId, postId, content, date) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, reply.getUserAccountId(), reply.getPostId(), reply.getContent(), reply.getDate());
+    }
+
+    public void deleteReplyById(int replyId) {
+        String sql = "DELETE FROM postreply WHERE id = ?";
+        jdbcTemplate.update(sql, replyId);
     }
 
 

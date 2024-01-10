@@ -63,6 +63,13 @@ public class BoardController {
         return ResponseEntity.ok(newPost);
     }
 
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable int postId) {
+        postService.removePost(postId);
+        return ResponseEntity.ok("Post deleted successfully");
+    }
+
+
     @PostMapping("/posts/{postId}/replies")
     public ResponseEntity<?> createPostReply(@PathVariable int postId, @RequestBody String content, HttpSession session) {
         UserAccount loggedInUser = (UserAccount) session.getAttribute("loggedInUser");
@@ -85,9 +92,18 @@ public class BoardController {
 
     @GetMapping("/posts/{postId}/getReplies")
     public ResponseEntity<List<PostReply>> getRepliesForPost(@PathVariable int postId) {
+        System.out.println(postId);
         List<PostReply> replies = postReplyRepository.getRepliesByPostId(postId);
+        System.out.println(replies.toString());
         return ResponseEntity.ok(replies);
     }
+
+    @DeleteMapping("post/replies/{replyId}")
+    public ResponseEntity<?> deleteReply(@PathVariable int replyId) {
+        postReplyService.removeReply(replyId);
+        return ResponseEntity.ok("Reply deleted successfully");
+    }
+
 
 
 

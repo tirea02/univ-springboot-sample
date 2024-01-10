@@ -16,5 +16,10 @@ public class PostReplyService {
         postReplyRepository.saveReply(reply);
     }
 
+    public void removeReply(int replyId) {
+        postReplyRepository.deleteReplyById(replyId);
+    }
+
+
 
 }

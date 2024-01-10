@@ -93,5 +93,11 @@ public class PostRepository {
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
+    public void deletePostById(int postId) {
+        String sql = "DELETE FROM post WHERE id = ?";
+        jdbcTemplate.update(sql, postId);
+    }
+
+
 
 }
