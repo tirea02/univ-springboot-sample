@@ -1,3 +1,10 @@
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        // The page was loaded from the cache
+        window.location.reload();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
 
 
@@ -111,32 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    //
-    // fetch('/board/posts')
-    //     .then(response => {
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(posts => {
-    //         const postsContainer = document.getElementById('posts');
-    //         posts.forEach(post => {
-    //             const postElement = document.createElement('div');
-    //             postElement.innerHTML = `
-    //                     <h3 class="post-title"><a href="post-detail.html?postId=${post.id}">${post.title}</a></h3>
-    //                     <p>Posted by: ${post.userId}</p>
-    //                     <p>Date: ${new Date(post.date).toLocaleString()}</p>
-    //                     <p>viewCounts: ${post.viewCount}</p>
-    //                 `;
-    //             postsContainer.appendChild(postElement);
-    //         });
-    //
-    //     })
-    //     .catch(error => {
-    //         console.error('Error fetching posts:', error);
-    //         postsContainer.innerHTML = '<p>Failed to load posts.</p>';
-    //     });
+
 
 
 });

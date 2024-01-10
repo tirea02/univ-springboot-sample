@@ -50,16 +50,33 @@ public class PostRepository {
         );
     }
 
+    public Post update(Post post) {
+        String updateSql = "UPDATE post SET title = ?, content = ?, date = ?, viewCount = ?, img_file = ?, userId = ? WHERE id = ?";
+
+        jdbcTemplate.update(updateSql,
+                post.getTitle(),
+                post.getContent(),
+                post.getDate(),
+                post.getViewCount(),
+                post.getImgFile(),
+                post.getUserAccountId(),
+                post.getId()
+        );
+
+        return post;
+    }
+
     public Post save(Post post) {
-        String sql = "INSERT INTO post (title, content, img_file, userId, date) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO post (title, content, date, viewCount, img_file, userId ) VALUES (?, ?, ?, ?, ?, ?)";
 
         // Ensure the order of parameters matches the SQL query
         jdbcTemplate.update(sql,
                 post.getTitle(),
                 post.getContent(),
+                post.getDate(),
+                post.getViewCount(),
                 post.getImgFile(),
-                post.getUserAccountId(), // This should be the ID of the userAccount
-                post.getDate() // Assuming date is already set in the Post object
+                post.getUserAccountId()
         );
 
         // Retrieve the last inserted ID
@@ -75,5 +92,6 @@ public class PostRepository {
 
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
+
 
 }

@@ -27,6 +27,7 @@ public class PostService {
         Post post = new Post();
         post.setTitle(newPostDto.getTitle());
         post.setContent(newPostDto.getContent());
+        post.setViewCount(0);
         post.setImgFile(newPostDto.getImgFile());
         post.setUserAccountId(userAccountId); // Set the userId of the post
         post.setDate(LocalDateTime.now()); // Set the current date and time
@@ -34,4 +35,16 @@ public class PostService {
         // Save the post to the database
         return postRepository.save(post);
     }
+
+    public Post incrementViewCount(Integer postId) {
+        Post post = postRepository.getPostById(postId);
+        if (post != null) {
+            post.setViewCount(post.getViewCount() + 1);
+            System.out.println(post.toString());
+            postRepository.update(post);
+        }
+        return post;
+    }
+
+
 }
