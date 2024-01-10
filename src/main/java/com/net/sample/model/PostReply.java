@@ -17,4 +17,7 @@ public class PostReply {
     private String content;
     private LocalDateTime date;
 
+    //adding for convenient
+    private String userId;
+
 }

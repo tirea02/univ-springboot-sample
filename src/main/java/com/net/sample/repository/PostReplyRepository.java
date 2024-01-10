@@ -18,6 +18,7 @@ public class PostReplyRepository {
         PostReply reply = new PostReply();
         reply.setId(rs.getInt("id"));
         reply.setUserAccountId(rs.getInt("userAccountId"));
+        reply.setUserId(rs.getString("userId")); // Map the userId from the ResultSet
         reply.setPostId(rs.getInt("postId"));
         reply.setContent(rs.getString("content"));
         reply.setDate(rs.getTimestamp("date").toLocalDateTime());
@@ -25,7 +26,9 @@ public class PostReplyRepository {
     };
 
     public List<PostReply> getRepliesByPostId(int postId) {
-        String sql = "SELECT * FROM postreply WHERE postId = ?";
+        String sql = "SELECT pr.*, ua.userId FROM postreply pr " +
+                "JOIN userAccount ua ON pr.userAccountId = ua.id " +
+                "WHERE pr.postId = ?";
         return jdbcTemplate.query(sql, new Object[]{postId}, rowMapper);
     }
 

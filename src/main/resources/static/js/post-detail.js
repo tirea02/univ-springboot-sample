@@ -1,4 +1,8 @@
+
+
 let postId;
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     postId = urlParams.get('postId'); // Get the post ID from the query string
@@ -48,6 +52,8 @@ function showReplyForm(user) {
 
 function hideReplyForm() {
     // Logic to hide the reply form or display a login prompt
+    // i set default display as none so now this function is not needed
+    // but u can add logic as u want if need
 }
 
 function submitReply() {
@@ -79,7 +85,7 @@ function fetchReplies(postId) {
                 replyDiv.className = 'reply';
                 replyDiv.innerHTML = `
                     <p>${reply.content}</p>
-                    <small>Posted by User ${reply.userAccountId} on ${new Date(reply.date).toLocaleString()}</small>
+                    <small>Posted by User ${reply.userId} on ${new Date(reply.date).toLocaleString()}</small>
                 `;
                 repliesListDiv.appendChild(replyDiv);
             });
