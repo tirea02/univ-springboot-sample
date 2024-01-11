@@ -96,5 +96,8 @@ INSERT INTO post (title, content, date, viewCount, img_file, userId) VALUES
 ('Tenth Post', 'Content of the tenth post', NOW(), 0, 'image10.jpg', 1);
 ```
 
-
+이미지 파일의 경우 src/main/resources/static/img 에 저장하면됩니다.
+해당 샘플코드에는 이미지를 올리고 프리뷰를 제공하고 이미지 파일 이름을 제공하는 기능은 있지만 실제 서버가 아닌 로컬 서버를 사용하기 때문에
+이미지를 작업중인 컴퓨터 경로(src/main/resources/static/img) 에 저장해주셔야 합니다.
+ex) src/main/resources/static/img/image1.jpg
 
