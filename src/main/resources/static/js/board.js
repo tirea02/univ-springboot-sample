@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listener to login button
     document.getElementById('loginButton').addEventListener('click', function() {
-        // Implement login logic or redirect to a login page
+
         window.location.href = '/login.html';
     });
 
@@ -76,15 +76,19 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('/board/posts')
         .then(response => response.json())
         .then(data => {
-            // Sort posts by date in descending order (newest first)
-            let  allPosts = data.sort((a, b) => new Date(b.date) - new Date(a.date));
-            displayPosts(allPosts, currentPage, postsPerPage);
-            // Create pagination buttons
-            createPaginationButtons(allPosts.length, postsPerPage, allPosts);
+            let allPosts = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            checkLoginStatus().then(loginResponse => {
+                console.log(loginResponse);
+                const loggedInUserId = loginResponse.status === "loggedIn" ? loginResponse.user.id : null;
+                displayPosts(allPosts, currentPage, postsPerPage, loggedInUserId);
+                createPaginationButtons(allPosts.length, postsPerPage, allPosts, loggedInUserId);
+            });
         })
         .catch(error => console.error('Error fetching posts:', error));
 
-    function displayPosts(posts, page, postsPerPage) {
+
+    function displayPosts(posts, page, postsPerPage, loggedInUserId = null) {
         const startIndex = (page - 1) * postsPerPage;
         const selectedPosts = posts.slice(startIndex, startIndex + postsPerPage);
 
@@ -92,17 +96,29 @@ document.addEventListener('DOMContentLoaded', function() {
         postsContainer.innerHTML = '';
         selectedPosts.forEach(post => {
             const postElement = document.createElement('div');
+            postElement.className = 'post';
+            postElement.setAttribute('data-author-id', post.userAccountId); // Assuming this is available
             postElement.innerHTML = `
-                <h3 class="post-title"><a href="post-detail.html?postId=${post.id}">${post.title}</a></h3>
-                <p>Posted by: ${post.userId}</p>
-                <p>Date: ${new Date(post.date).toLocaleString()}</p>
-                <p>viewCounts: ${post.viewCount}</p>
-            `;
+            <h3 class="post-title"><a href="post-detail.html?postId=${post.id}">${post.title}</a></h3>
+            <p>Posted by: ${post.userId}</p>
+            <p>Date: ${new Date(post.date).toLocaleString()}</p>
+            <p>viewCounts: ${post.viewCount}</p>
+        `;
+
+            // Show delete button only if the logged-in user is the author
+            if (loggedInUserId === post.userAccountId) {
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete Post';
+                deleteButton.onclick = () => deletePost(post.id);
+                postElement.appendChild(deleteButton);
+            }
+
             postsContainer.appendChild(postElement);
         });
     }
 
-    function createPaginationButtons(totalPosts, postsPerPage, allPosts) {
+
+    function createPaginationButtons(totalPosts, postsPerPage, allPosts, loggedInUserId) {
         const pageCount = Math.ceil(totalPosts / postsPerPage);
         const paginationContainer = document.getElementById('pagination');
         paginationContainer.innerHTML = '';
@@ -112,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             button.innerText = i;
             button.addEventListener('click', () => {
                 currentPage = i;
-                displayPosts(allPosts, currentPage, postsPerPage);
+                displayPosts(allPosts, currentPage, postsPerPage, loggedInUserId);
             });
             paginationContainer.appendChild(button);
         }
@@ -122,4 +138,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+
+
+
+function deletePost(postId) {
+    fetch(`/board/posts/${postId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (response.ok) {
+                // Remove the post element from the DOM or refresh the post list
+                console.log('Post deleted successfully');
+                window.location.reload(); // Simple way to refresh the posts
+            } else {
+                console.error('Failed to delete post');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
 

@@ -3,6 +3,7 @@ package com.net.sample.service;
 import com.net.sample.dto.NewPost;
 import com.net.sample.model.Post;
 import com.net.sample.model.PostReply;
+import com.net.sample.repository.PostReplyRepository;
 import com.net.sample.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +20,9 @@ public class PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private PostReplyService postReplyService;
 
 
 
@@ -47,6 +51,10 @@ public class PostService {
     }
 
     public void removePost(int postId) {
+        // First, remove all replies associated with the post
+        postReplyService.removeRepliesByPostId(postId);
+
+        // Then, remove the post
         postRepository.deletePostById(postId);
     }
 

@@ -20,6 +20,10 @@ public class PostReplyService {
         postReplyRepository.deleteReplyById(replyId);
     }
 
+    public void removeRepliesByPostId(int postId) {
+        postReplyRepository.deleteRepliesByPostId(postId);
+    }
+
 
 
 }

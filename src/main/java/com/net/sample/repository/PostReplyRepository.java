@@ -43,5 +43,11 @@ public class PostReplyRepository {
         jdbcTemplate.update(sql, replyId);
     }
 
+    //post삭제시 reply 도 삭제되야함
+    public void deleteRepliesByPostId(int postId) {
+        String sql = "DELETE FROM postreply WHERE postId = ?";
+        jdbcTemplate.update(sql, postId);
+    }
+
 
 }

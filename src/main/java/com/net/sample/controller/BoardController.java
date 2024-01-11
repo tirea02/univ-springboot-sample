@@ -49,7 +49,7 @@ public class BoardController {
 
     @PostMapping("/createPost")
     public ResponseEntity<?> createPost(@RequestBody NewPost postDto, HttpSession session) {
-        System.out.println(postDto.toString());
+//        System.out.println(postDto.toString());
 
         UserAccount loggedInUser = (UserAccount) session.getAttribute("loggedInUser");
         Integer userId = loggedInUser.getId();
@@ -63,10 +63,10 @@ public class BoardController {
         return ResponseEntity.ok(newPost);
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/posts/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable int postId) {
         postService.removePost(postId);
-        return ResponseEntity.ok("Post deleted successfully");
+        return ResponseEntity.ok("Post and its replies deleted successfully");
     }
 
 
@@ -92,9 +92,7 @@ public class BoardController {
 
     @GetMapping("/posts/{postId}/getReplies")
     public ResponseEntity<List<PostReply>> getRepliesForPost(@PathVariable int postId) {
-        System.out.println(postId);
         List<PostReply> replies = postReplyRepository.getRepliesByPostId(postId);
-        System.out.println(replies.toString());
         return ResponseEntity.ok(replies);
     }
 
