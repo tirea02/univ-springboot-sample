@@ -7,6 +7,13 @@ gradle refresh -> project clean -> refresh 후 실행.
 
 eclipse의 경우 build.gradle을 통해 lombok을 추가해도 따로 공식 홈페이지에서 다운, 실행 후에 eclipse를 등록해 줘야 적용가능한 현상 확인.
 
+프로그램 구동시 localhost:8080/  서버구동
+localhost:8080/board.html 입력으로 접속 
+
+
+
+
+
 아래는 mysql DB 테이블 스키마 구조 및 샘플 데이터 sql 코드
 application.properties 파일에서 DB 관련 사항 본인에 맞게 수정 후 사용
 ```java
